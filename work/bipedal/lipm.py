@@ -12,12 +12,12 @@ class LinearInvertedPendulum(object):
 
     A = np.array([[0, 1],[omega2, 0]]) # state matrix
     B = np.array([[0],[-omega2]]) # input matrix
-    dT = 0.01
 
-    def __init__(self, x, x_ref, u_ref, x_dot = 0., x_ddot = 0):
+    def __init__(self, x, x_ref, u_ref, dt = 0.01, x_dot = 0., x_ddot = 0):
         self.X = np.array([[x], [x_dot]])
         self.X_dot = np.array([[x_dot], [x_ddot]])
         self.u = self.bestCOG_Regulator(x_ref, u_ref)
+        self.dT = dt
 
     def do_action(self, x_ref, u_ref):
         self.u = self.bestCOG_Regulator(x_ref, u_ref)
@@ -61,28 +61,30 @@ def video(x_hs, u_hs, h, t):
     def animate(i):
         line.set_data([u_hs[i], x_hs[i]],[0, h])
         circle.set_data([ox + x_hs[i]],[ oy + h])
-        time_text.set_text('time = {0:.1f}'.format(i*t))
+        time_text.set_text('time = {0:.2f}'.format(i*t))
         return line, time_text
 
     ani = animation.FuncAnimation(fig, animate, frames=range(len(x_hs)),
-                                  interval=t, blit=False, init_func=init)
-    plt.show()
+                                  interval=t*1000, blit=False, init_func=init)
+    #plt.show()
+    ani.save("output.gif", writer="imagemagick")
 
 if __name__ == '__main__':
     x_ref = np.array([[0.5],[0.]])
     u_ref = np.array([[0.5]])
-    plant = LinearInvertedPendulum(0.0 , x_ref, u_ref)
+    x_start = 0.0
+    dt = 0.01
+    period = 400
+    plant = LinearInvertedPendulum(x_start, x_ref, u_ref, dt)
     X_history = np.array(plant.get_X())
     u_history = np.array(plant.get_u())
-    for i in range(1000):
+    for i in range(period-1):
         plant.do_action(x_ref, u_ref)
         u_history = np.append(u_history, plant.get_u(), axis=1)
         X_history = np.append(X_history, plant.get_X(), axis=1)
 
-    dt = 0.01
-    t = np.linspace(0, 1000*dt, 1001)
-    
+    t = np.linspace(0, period*dt, period)
     plt.plot(t, X_history[0], t, X_history[1], t, u_history[0])
     plt.show()
     
-    video(X_history[0], u_history[0], plant.h, 1)
+    video(X_history[0], u_history[0], plant.h, dt)
