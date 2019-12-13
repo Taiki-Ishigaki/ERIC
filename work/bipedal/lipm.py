@@ -14,23 +14,23 @@ class LinearInvertedPendulum(object):
     B = np.array([[0],[-omega2]]) # input matrix
     dT = 0.01
 
-    def __init__(self, x, u = 0, x_dot = 0., x_ddot = 0):
+    def __init__(self, x, x_ref, u_ref, x_dot = 0., x_ddot = 0):
         self.X = np.array([[x], [x_dot]])
         self.X_dot = np.array([[x_dot], [x_ddot]])
-        self.u = np.array([[u]])
+        self.u = self.bestCOG_Regulator(x_ref, u_ref)
 
-    def do_action(self, x_ref):
-        self.u = self.bestCOG_Regulator(x_ref)
+    def do_action(self, x_ref, u_ref):
+        self.u = self.bestCOG_Regulator(x_ref, u_ref)
         self.update_state()
 
     def update_state(self):
         self.X_dot = self.A @ self.X + self.B @ self.u
         self.X =self.X + self.X_dot * self.dT 
 
-    def bestCOG_Regulator(self, X_ref):
-        self.alpha = 2.0
-        self.F = np.array([[1.0, 1.0/self.omega2]])*self.alpha
-        return -self.F @ (X_ref - self.X)
+    def bestCOG_Regulator(self, x_ref, u_ref):
+        self.alpha = 3.0
+        self.F = self.alpha * np.array([[1.0, 1.0/self.omega2]])
+        return u_ref - self.F @ (x_ref - self.X)
 
     def get_X(self):
         return self.X
@@ -68,22 +68,19 @@ def video(x_hs, u_hs, h, t):
                                   interval=t, blit=False, init_func=init)
     plt.show()
 
-
-
 if __name__ == '__main__':
-    plant = LinearInvertedPendulum(0)
-    angle_history = [np.pi/12]
-    X_history = np.array([[0.],[0.]])
-    u_history = np.array([[0.]])
+    x_ref = np.array([[0.5],[0.]])
+    u_ref = np.array([[0.5]])
+    plant = LinearInvertedPendulum(0.0 , x_ref, u_ref)
+    X_history = np.array(plant.get_X())
+    u_history = np.array(plant.get_u())
     for i in range(1000):
-        plant.do_action(np.array([[0.5],[0.]]))
+        plant.do_action(x_ref, u_ref)
         u_history = np.append(u_history, plant.get_u(), axis=1)
         X_history = np.append(X_history, plant.get_X(), axis=1)
 
     dt = 0.01
     t = np.linspace(0, 1000*dt, 1001)
-
-    #print(u_history.shape)
     
     plt.plot(t, X_history[0], t, X_history[1], t, u_history[0])
     plt.show()
