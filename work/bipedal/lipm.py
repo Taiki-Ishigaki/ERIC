@@ -66,24 +66,25 @@ def video(x_hs, u_hs, h, t):
 
     ani = animation.FuncAnimation(fig, animate, frames=range(len(x_hs)),
                                   interval=t*1000, blit=False, init_func=init)
-    #plt.show()
-    ani.save("output.gif", writer="imagemagick")
+    plt.show()
+    #ani.save("output.gif", writer="imagemagick")
 
 if __name__ == '__main__':
     x_ref = np.array([[0.5],[0.]])
     u_ref = np.array([[0.5]])
     x_start = 0.0
     dt = 0.01
-    period = 400
+    period = 4
+    time_step = (int) (period / dt)
     plant = LinearInvertedPendulum(x_start, x_ref, u_ref, dt)
     X_history = np.array(plant.get_X())
     u_history = np.array(plant.get_u())
-    for i in range(period-1):
+    for i in range(time_step-1):
         plant.do_action(x_ref, u_ref)
         u_history = np.append(u_history, plant.get_u(), axis=1)
         X_history = np.append(X_history, plant.get_X(), axis=1)
 
-    t = np.linspace(0, period*dt, period)
+    t = np.linspace(0, time_step*dt, time_step)
     plt.plot(t, X_history[0], t, X_history[1], t, u_history[0])
     plt.show()
     
