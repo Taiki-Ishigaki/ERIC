@@ -24,13 +24,13 @@ class LinearInvertedPendulum(object):
         self.update_state()
 
     def update_state(self):
-        self.X_dot = self.A.dot(self.X) + self.B.dot(self.u)
-        self.X =self.X +  np.dot(self.dT,self.X_dot)
+        self.X_dot = self.A @ self.X + self.B @ self.u
+        self.X =self.X + self.X_dot * self.dT 
 
     def bestCOG_Regulator(self, X_ref):
         self.alpha = 2.0
         self.F = np.array([[1.0, 1.0/self.omega2]])*self.alpha
-        return -self.F.dot((X_ref - self.X))
+        return -self.F @ (X_ref - self.X)
 
     def get_X(self):
         return self.X
