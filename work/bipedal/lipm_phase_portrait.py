@@ -24,9 +24,18 @@ class LinearInvertedPendulum(object):
         self.B = np.array([[0],[-self.omega2]]) # input matrix
 
     def dX(self, X, t = 0):
-        # return self.A @ X
-        return [X[1], self.omega2*X[0]]
-
+        if X.shape == np.zeros((self.A[0].size, 1)).shape:# normal
+            return self.A @ X
+        elif  X.ndim == 1: # for odeint
+            return self.A @ X.T
+        else: # for meshgrid
+            x_dot = np.zeros((X[:,0,0].size,X[0,0,:].size, X[0,:,0].size), dtype=np.float64)
+            for i in range(X[:,0,0].size):
+                x_tmp =  np.empty((0,X[0,0,:].size, X[0,:,0].size), dtype=np.float64)
+                for j in range(X[:,0,0].size):
+                    x_tmp = np.append(x_tmp, np.array([self.A[j,i] * X[i]]), axis = 0)    
+                x_dot += x_tmp
+            return x_dot
 
 if __name__ == '__main__':
     x_ref = np.array([[0.5],[0.]])
@@ -37,11 +46,13 @@ if __name__ == '__main__':
     plant = LinearInvertedPendulum(height)
 
     #mesh
-    x_max = 6
-    x_min = -6
-    x_d_max = 6
-    x_d_min = -6
-    X = np.meshgrid(np.arange(x_min, x_max, 0.5), np.arange(x_d_min, x_d_max, 0.5))
+    limit = 6
+    x_max = limit
+    x_min = -limit
+    x_d_max = limit
+    x_d_min = -limit
+    X1, X2 = np.meshgrid(np.arange(x_min, x_max, 0.5), np.arange(x_d_min, x_d_max, 0.5))
+    X = np.array([X1, X2])
     dX = plant.dX(X)
 
     #normalize
