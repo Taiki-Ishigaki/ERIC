@@ -7,14 +7,13 @@ import sys
 sys.path.append('../../scripts/')
 from bipedal_robot.lipm import LinearInvertedPendulum
 
-def video(x_hs, u_hs, h, t):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, aspect='equal', autoscale_on=False, xlim=(-2, 2), ylim=(-0.5, 3.5))
+def video(x_hs, u_hs, h, t, fig):
+    ax = fig.add_subplot(221, autoscale_on=False, xlim=(-2, 2), ylim=(-0.5, 3.5))
     ax.grid()
     line, = ax.plot([], [], '-r', lw=2)
     time_text = ax.text(0.02, 0.95, 'time = 0.0', transform=ax.transAxes)
 
-    # circle
+    # cog circle
     circle, = ax.plot([], [], '-r', lw=2)
     radius = 0.1
     angles = np.arange(0.0, np.pi * 2.0, np.radians(3.0))
@@ -54,10 +53,13 @@ if __name__ == '__main__':
         X_history = np.append(X_history, plant.get_X(), axis=1)
 
     t = np.linspace(0, time_step*dt, time_step)
+
+    fig = plt.figure()
+
+    plt.subplot(212)
     plt.plot(t, X_history[0], label="COG position")
     plt.plot(t, X_history[1], label="COG velosity")
     plt.plot(t, u_history[0], label="ZMP position")
     plt.legend()
-    plt.show()
     
-    video(X_history[0], u_history[0], plant.h, dt)
+    video(X_history[0], u_history[0], plant.h, dt, fig)
