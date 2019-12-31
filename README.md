@@ -1,7 +1,7 @@
 # Eric
 help for studying robotics
 
-depend on these library
+## Depended on these library
 - matplotlib
 - numpy 
 - scipy
@@ -12,6 +12,7 @@ pip install scipy
 pip install matplotlib
 ```
 
+## Required to save videos
 ```
 sudo apt install imagemagick
 ```
