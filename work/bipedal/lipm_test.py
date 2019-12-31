@@ -2,14 +2,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.patches as patches
 
 import sys
 sys.path.append('../../scripts/')
 from bipedal_robot.lipm import LinearInvertedPendulum
 
 def video(x_hs, u_hs, h, t, fig):
-    ax = fig.add_subplot(221, autoscale_on=False, xlim=(-2, 2), ylim=(-0.5, 3.5))
+    ax = fig.add_subplot(221, aspect='equal', autoscale_on=False, xlim=(-2, 2), ylim=(-0.5, 3.5))
     ax.grid()
+
+    #line
     line, = ax.plot([], [], '-r', lw=2)
     time_text = ax.text(0.02, 0.95, 'time = 0.0', transform=ax.transAxes)
 
@@ -20,15 +23,19 @@ def video(x_hs, u_hs, h, t, fig):
     ox = radius * np.cos(angles) 
     oy = radius * np.sin(angles)
 
+    rectangle = ax.add_patch(patches.Rectangle(xy=(u_hs[0]-0.25/2, -0.25/2), width=0.25, height=0.25,  ec='r', fill=False, lw=2))
+
     def init():
         line.set_data([], [])
         circle.set_data([], [])
+        rectangle.set_xy([u_hs[0]-0.25/2, -0.25/2])
         time_text.set_text('')
         return line, time_text
 
     def animate(i):
         line.set_data([u_hs[i], x_hs[i]],[0, h])
         circle.set_data([ox + x_hs[i]],[ oy + h])
+        rectangle.set_xy([u_hs[i]-0.25/2, -0.25/2])
         time_text.set_text('time = {0:.2f}'.format(i*t))
         return line, time_text
 
