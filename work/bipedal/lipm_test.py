@@ -3,40 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-class LinearInvertedPendulum(object):
-    # actions = [0, 1, 2]
-    h = 1.5 # height of cog
-    g = 9.8 # gravity
-    omega2 = g/h
-    omega = np.sqrt(omega2)
-
-    A = np.array([[0, 1],[omega2, 0]]) # state matrix
-    B = np.array([[0],[-omega2]]) # input matrix
-
-    def __init__(self, x, x_ref, u_ref, dt = 0.01, x_dot = 0., x_ddot = 0):
-        self.X = np.array([[x], [x_dot]])
-        self.X_dot = np.array([[x_dot], [x_ddot]])
-        self.u = self.bestCOG_Regulator(x_ref, u_ref)
-        self.dT = dt
-
-    def do_action(self, x_ref, u_ref):
-        self.u = self.bestCOG_Regulator(x_ref, u_ref)
-        self.update_state()
-
-    def update_state(self):
-        self.X_dot = self.A @ self.X + self.B @ self.u
-        self.X =self.X + self.X_dot * self.dT 
-
-    def bestCOG_Regulator(self, x_ref, u_ref):
-        self.alpha = 3.0
-        self.F = self.alpha * np.array([[1.0, 1.0/self.omega2]])
-        return u_ref - self.F @ (x_ref - self.X)
-
-    def get_X(self):
-        return self.X
-    
-    def get_u(self):
-        return self.u
+import sys
+sys.path.append('../../scripts/')
+from bipedal_robot.lipm import LinearInvertedPendulum
 
 def video(x_hs, u_hs, h, t):
     fig = plt.figure()
@@ -85,7 +54,10 @@ if __name__ == '__main__':
         X_history = np.append(X_history, plant.get_X(), axis=1)
 
     t = np.linspace(0, time_step*dt, time_step)
-    plt.plot(t, X_history[0], t, X_history[1], t, u_history[0])
+    plt.plot(t, X_history[0], label="COG position")
+    plt.plot(t, X_history[1], label="COG velosity")
+    plt.plot(t, u_history[0], label="ZMP position")
+    plt.legend()
     plt.show()
     
     video(X_history[0], u_history[0], plant.h, dt)
