@@ -50,8 +50,10 @@ if __name__ == '__main__':
     x_start = 0.0
     dt = 0.01
     period = 4
+    height = 1.5
     time_step = (int) (period / dt)
-    plant = LinearInvertedPendulum(x_start, x_ref, u_ref, dt)
+    plant = LinearInvertedPendulum(height)
+    plant.init_state(x_start, x_ref, u_ref, dt)
     X_history = np.array(plant.get_X())
     u_history = np.array(plant.get_u())
     for i in range(time_step-1):
@@ -69,4 +71,4 @@ if __name__ == '__main__':
     plt.plot(t, u_history[0], label="ZMP position")
     plt.legend()
     
-    video(X_history[0], u_history[0], plant.h, dt, fig)
+    video(X_history[0], u_history[0], plant.height, dt, fig)
