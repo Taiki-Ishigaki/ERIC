@@ -40,7 +40,7 @@ class PID(object):
         self.k = np.array([[kp, kd]])
 
     def controller(self, x, x_ref, u_ref):
-        return u_ref + self.k @ x #(x - x_ref)
+        return u_ref - self.k @ (x - x_ref)
 
 if __name__ == '__main__':
     x = np.array([[0.5],[0.5]])
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     X_history = np.array(plant.get_X())
     u_history = np.array(plant.get_u())
     for i in range(time_step-1):
-        plant.do_action(pid.controller(x, x_ref, u))
+        plant.do_action(pid.controller(plant.get_X(), x_ref, u))
         plant.update_state()
         u_history = np.append(u_history, plant.get_u())
         X_history = np.append(X_history, plant.get_X(), axis=1)
