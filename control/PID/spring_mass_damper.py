@@ -22,8 +22,8 @@ class SpringMassDamper(object):
         self.A = np.array([[0, 1],[-self.k/self.m, -self.d/self/m]]) # state matrix
         self.B = np.array([[0],[1/self.m]]) # input matrix
 
-    def do_action(self, u_ref):
-        self.u = u_ref
+    def do_action(self, u):
+        self.u = u
 
     def update_state(self):
         self.X_dot = self.A @ self.X + self.B @ self.u
@@ -35,18 +35,27 @@ class SpringMassDamper(object):
     def get_u(self):
         return self.u
 
+class PID(object):
+    def __init__(self, kp, ki, kd):
+        self.k = np.array([[kp, kd]])
+
+    def controller(self, x, x_ref, u_ref):
+        return u_ref + self.k @ x #(x - x_ref)
+
 if __name__ == '__main__':
     x = np.array([[0.5],[0.5]])
     u = np.array([[0.0]])
+    x_ref = np.array([[0.0]])
     x_start = 0.0
     dt = 0.01
     period = 300
     time_step = (int) (period / dt)
-    plant = SpringMassDamper(0.5)
+    plant = SpringMassDamper(0.5, 0.5)
+    pid = PID(50, 20, 25)
     X_history = np.array(plant.get_X())
     u_history = np.array(plant.get_u())
     for i in range(time_step-1):
-        plant.do_action(u)
+        plant.do_action(pid.controller(x, x_ref, u))
         plant.update_state()
         u_history = np.append(u_history, plant.get_u())
         X_history = np.append(X_history, plant.get_X(), axis=1)
@@ -57,6 +66,6 @@ if __name__ == '__main__':
 
     plt.plot(t, X_history[0], label="position")
     plt.plot(t, X_history[1], label="velosity")
-    # plt.plot(t, u_history, label="ZMP position")
+    # plt.plot(t, u_history, label="control")
     plt.legend()
     plt.show()
