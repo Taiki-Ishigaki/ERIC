@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+import numpy as np
+import matplotlib.pyplot as plt
+
+class SpringMassDamper(object):
+    m = 50.0
+    k = 50.0
+    d = 25.0
+    A = np.array([[0, 1],[-k/m, -d/m]]) # state matrix
+    B = np.array([[0],[1/m]]) # input matrix
+
+    def __init__(self, x, x_dot = 0.,  x_ddot = 0., dt = 0.001):
+        self.X = np.array([[x], [x_dot]])
+        self.X_dot = np.array([[x_dot], [x_ddot]])
+        self.dT = dt
+        self.u = 0
+    
+    def init_system(self, mass, elasticity, viscocity):
+        self.m = mass
+        self.k = elasticity
+        self.d = viscocity
+        self.A = np.array([[0, 1],[-self.k/self.m, -self.d/self/m]]) # state matrix
+        self.B = np.array([[0],[1/self.m]]) # input matrix
+
+    def do_action(self, u_ref):
+        self.u = u_ref
+
+    def update_state(self):
+        self.X_dot = self.A @ self.X + self.B @ self.u
+        self.X = self.X + self.X_dot * self.dT 
+
+    def get_X(self):
+        return self.X
+    
+    def get_u(self):
+        return self.u
+
+if __name__ == '__main__':
+    x = np.array([[0.5],[0.5]])
+    u = np.array([[0.0]])
+    x_start = 0.0
+    dt = 0.01
+    period = 300
+    time_step = (int) (period / dt)
+    plant = SpringMassDamper(0.5)
+    X_history = np.array(plant.get_X())
+    u_history = np.array(plant.get_u())
+    for i in range(time_step-1):
+        plant.do_action(u)
+        plant.update_state()
+        u_history = np.append(u_history, plant.get_u())
+        X_history = np.append(X_history, plant.get_X(), axis=1)
+
+    t = np.linspace(0, time_step*dt, time_step)
+
+    fig = plt.figure()
+
+    plt.plot(t, X_history[0], label="position")
+    plt.plot(t, X_history[1], label="velosity")
+    # plt.plot(t, u_history, label="ZMP position")
+    plt.legend()
+    plt.show()
