@@ -54,7 +54,7 @@ class LMIK(object):
         daig_w_E = np.full(self.robot.task_dof(), w_E)
         self.W_E = np.diag(daig_w_E)
         w_N_ = 0.001
-        daig_w_N_ = np.full(self.robot.task_dof(), w_N_)
+        daig_w_N_ = np.full(self.robot.joint_dof(), w_N_)
         self.W_N_ = np.diag(daig_w_N_)
     
     def evaluate(self, e):
