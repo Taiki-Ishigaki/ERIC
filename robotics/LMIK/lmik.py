@@ -118,7 +118,7 @@ def video(robot, q1, q2, t, fig):
         time_text.set_text('time = {0:.2f}'.format(i*t))
         return time_text
 
-    ani = animation.FuncAnimation(fig, animate, frames=range(400),
+    ani = animation.FuncAnimation(fig, animate, frames=range(200),
                                   interval=t*100, blit=False, init_func=init)
     #plt.show()
     ani.save("output.gif", writer="imagemagick")
@@ -133,7 +133,7 @@ def plan_orbit2(x):
 
 if __name__ == '__main__':
     dt = 0.01
-    step = 200
+    step = 100
     robot = ARM2DOF()
     IK = LMIK(robot)
 
