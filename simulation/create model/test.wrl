@@ -1,0 +1,1447 @@
+#VRML V2.0 utf8
+
+PROTO Joint [
+  exposedField     SFVec3f      center              0 0 0
+  exposedField     MFNode       children            []
+  exposedField     MFFloat      llimit              []
+  exposedField     MFFloat      lvlimit             []
+  exposedField     SFRotation   limitOrientation    0 0 1 0
+  exposedField     SFString     name                ""
+  exposedField     SFRotation   rotation            0 0 1 0
+  exposedField     SFVec3f      scale               1 1 1
+  exposedField     SFRotation   scaleOrientation    0 0 1 0
+  exposedField     MFFloat      stiffness           [ 0 0 0 ]
+  exposedField     SFVec3f      translation         0 0 0
+  exposedField     MFFloat      ulimit              []
+  exposedField     MFFloat      uvlimit             []
+  exposedField     SFString     jointType           ""
+  exposedField     SFInt32      jointId             -1
+  exposedField     SFVec3f      jointAxis           0 0 1
+  exposedField     SFFloat      gearRatio           1
+  exposedField     SFFloat      rotorInertia        0
+  exposedField     SFFloat      rotorResistor       0
+  exposedField     SFFloat      torqueConst         1
+  exposedField     SFFloat      encoderPulse        1
+]
+{
+  Transform {
+    center           IS center
+    children         IS children
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+  }
+}
+
+PROTO Segment [
+  field           SFVec3f     bboxCenter        0 0 0
+  field           SFVec3f     bboxSize          -1 -1 -1
+  exposedField    SFVec3f     centerOfMass      0 0 0
+  exposedField    MFNode      children          [ ]
+  exposedField    SFNode      coord             NULL
+  exposedField    MFNode      displacers        [ ]
+  exposedField    SFFloat     mass              0
+  exposedField    MFFloat     momentsOfInertia  [ 0 0 0 0 0 0 0 0 0 ]
+  exposedField    SFString    name              ""
+  eventIn         MFNode      addChildren
+  eventIn         MFNode      removeChildren
+]
+{
+  Group {
+    addChildren    IS addChildren
+    bboxCenter     IS bboxCenter
+    bboxSize       IS bboxSize
+    children       IS children
+    removeChildren IS removeChildren
+  }
+}
+
+PROTO Humanoid [
+  field           SFVec3f    bboxCenter            0 0 0
+  field           SFVec3f    bboxSize              -1 -1 -1
+  exposedField    SFVec3f    center                0 0 0
+  exposedField    MFNode     humanoidBody          [ ]
+  exposedField    MFString   info                  [ ]
+  exposedField    MFNode     joints                [ ]
+  exposedField    SFString   name                  ""
+  exposedField    SFRotation rotation              0 0 1 0
+  exposedField    SFVec3f    scale                 1 1 1
+  exposedField    SFRotation scaleOrientation      0 0 1 0
+  exposedField    MFNode     segments              [ ]
+  exposedField    MFNode     sites                 [ ]
+  exposedField    SFVec3f    translation           0 0 0
+  exposedField    SFString   version               "1.1"
+  exposedField    MFNode     viewpoints            [ ]
+]
+{
+  Transform {
+    bboxCenter       IS bboxCenter
+    bboxSize         IS bboxSize
+    center           IS center
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+    children [
+      Group {
+        children IS viewpoints
+      }
+      Group {
+        children IS humanoidBody
+      }
+    ]
+  }
+}
+
+PROTO VisionSensor [
+  exposedField SFVec3f    translation       0 0 0
+  exposedField SFRotation rotation          0 0 1 0
+  exposedField MFNode     children          [ ]
+  exposedField SFFloat    fieldOfView       0.785398
+  exposedField SFString   name              ""
+  exposedField SFFloat    frontClipDistance 0.01
+  exposedField SFFloat    backClipDistance  10.0
+  exposedField SFString   type              "NONE"
+  exposedField SFInt32    sensorId          -1
+  exposedField SFInt32    width             320
+  exposedField SFInt32    height            240
+  exposedField SFFloat    frameRate         10
+]
+{
+  Transform {
+    rotation         IS rotation
+    translation      IS translation
+    children         IS children
+  }
+}
+
+PROTO ForceSensor [
+  exposedField SFVec3f    maxForce    -1 -1 -1
+  exposedField SFVec3f    maxTorque   -1 -1 -1
+  exposedField SFVec3f    translation 0 0 0
+  exposedField SFRotation rotation    0 0 1 0
+  exposedField MFNode     children          [ ]
+  exposedField SFInt32    sensorId    -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+    children    IS children
+  }
+}
+
+PROTO Gyro [
+  exposedField SFVec3f    maxAngularVelocity -1 -1 -1
+  exposedField SFVec3f    translation        0 0 0
+  exposedField SFRotation rotation           0 0 1 0
+  exposedField MFNode     children          [ ]
+  exposedField SFInt32    sensorId           -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+    children    IS children
+  }
+}
+
+PROTO AccelerationSensor [
+  exposedField SFVec3f    maxAcceleration -1 -1 -1
+  exposedField SFVec3f    translation     0 0 0
+  exposedField SFRotation rotation        0 0 1 0
+  exposedField MFNode     children          [ ]
+  exposedField SFInt32    sensorId        -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+    children    IS children
+  }
+}
+
+PROTO RangeSensor [
+  exposedField SFVec3f    translation     0 0 0
+  exposedField SFRotation rotation        0 0 1 0
+  exposedField MFNode     children        [ ]
+  exposedField SFInt32    sensorId        -1
+  exposedField SFFloat    scanAngle       1.5707963267948966   #[rad]
+  exposedField SFFloat    scanStep        0.017453292519943295 #[rad]
+  exposedField SFFloat    scanRate        10      #[Hz]
+  exposedField SFFloat    maxDistance      10
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+    children    IS children
+  }
+}
+
+PROTO SpotLightDevice [
+  exposedField SFVec3f attenuation       1 0 0     # [0,)
+  exposedField SFFloat beamWidth         1.570796  # (0,/2]
+  exposedField SFColor color             1 1 1     # [0,1]
+  exposedField SFFloat cutOffAngle       0.785398  # (0,/2]
+  exposedField SFVec3f direction         0 0 -1    # (-,)
+  exposedField SFFloat intensity         1         # [0,1]
+  exposedField SFBool  on                TRUE
+  exposedField SFVec3f    translation 0 0 0
+  exposedField SFRotation rotation    0 0 1 0
+]
+{
+  Transform {
+    translation      IS translation
+    rotation         IS rotation
+  }
+}
+
+PROTO Plane [
+  exposedField SFVec3f size 10 10 0
+]
+{
+  Box {
+    size IS size
+  }
+}
+
+NavigationInfo {
+  avatarSize    0.5
+  headlight     TRUE
+  type  ["EXAMINE", "ANY"]
+}
+
+Background {
+  skyColor 0.4 0.6 0.4
+}
+
+Viewpoint {
+  position    3 0 0.835
+  orientation 0.5770 0.5775 0.5775 2.0935
+}
+
+DEF hydra Humanoid {
+  humanoidBody [
+    DEF waist_base Joint {
+      jointType "free"
+      translation  0 0 0
+      rotation 0.000000 0.000000 1.000000 0.000000
+      children [
+        DEF waist_base Segment {
+          centerOfMass  -0.02169 -5e-05 -0.03066
+          mass 5.034650
+          momentsOfInertia [
+          0.04828525277 3.67875e-06 -0.0014721266
+          3.67875e-06 0.01211607649 -1.089057e-05
+          -0.0014721266 -1.089057e-05 0.05443361551
+          ]
+          children [
+            DEF gsensor AccelerationSensor {
+              sensorId 0
+            }
+            DEF gyrometer Gyro {
+              sensorId 0
+            }
+            Transform {
+              children[
+                Shape{
+                    geometry Cylinder {
+                        radius 2.5
+                        height 4
+                    }
+                    appearance Appearance {
+                        material Material {}
+                    }
+                }
+              ]
+            }
+          ]
+        }
+        DEF rhip_y Joint {
+          jointType "rotate"
+          translation  0.0015 -0.125 -0.162
+          rotation 0.000000 0.000000 1.000000 3.141593
+          jointId 0
+          llimit [-1.047000]
+          ulimit [1.047000]
+          gearRatio 120.000000
+          rotorInertia 0.000040
+          children [
+            DEF rhip_y Segment {
+              centerOfMass  0.01641 0.00361 0.03934
+              mass 1.593870
+              momentsOfInertia [
+              0.00697554367 -8.334322e-05 -0.00034794546
+              -8.334322e-05 0.00533888663 0.00049910953
+              -0.00034794546 0.00049910953 0.00304326124
+              ]
+              children [
+                Transform {
+                  children[
+                    Shape{
+                      
+                    }
+                  ]
+                }
+              ]
+            }
+            DEF rhip_p Joint {
+              jointType "rotate"
+              translation  0 0 0
+              rotation 0.577350 0.577350 -0.577350 2.094395
+              jointId 1
+              llimit [-1.832000]
+              ulimit [0.000000]
+              gearRatio 120.000000
+              rotorInertia 0.000040
+              children [
+                DEF rhip_r Joint {
+                  jointType "rotate"
+                  translation  0 0 0
+                  rotation 0.000000 -0.707107 0.707107 3.141593
+                  jointId 2
+                  llimit [-0.392000]
+                  ulimit [0.392000]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                    DEF rhip_r Segment {
+                      centerOfMass  -0.22592 0.00813 0.00541
+                      mass 8.499320
+                      momentsOfInertia [
+                      0.04714227665 -0.00302587832 -0.00255344728
+                      -0.00302587832 0.1212263714 -0.00274226076
+                      -0.00255344728 -0.00274226076 0.1036673061
+                      ]
+                      children [
+                        Transform {
+                          children[
+                            Shape{
+
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                    DEF rknee_p Joint {
+                      jointType "rotate"
+                      translation  -0.432 0 0
+                      rotation 0.000000 -0.707107 0.707107 3.141593
+                      jointId 3
+                      llimit [0.000000]
+                      ulimit [2.094000]
+                      gearRatio 120.000000
+                      rotorInertia 0.000040
+                      children [
+                        DEF rknee_p Segment {
+                          centerOfMass  0.17447 -0.03387 -2e-05
+                          mass 4.668710
+                          momentsOfInertia [
+                          0.00955696304 0.00385873865 3.81878e-06
+                          0.00385873865 0.05580191949 -4.68685e-06
+                          3.81878e-06 -4.68685e-06 0.05564742212
+                          ]
+                          children [
+                            Transform {
+                              children[
+                                Shape{
+
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                        DEF rankle_r Joint {
+                          jointType "rotate"
+                          translation  0.403 -0.01 0
+                          rotation 0.000000 -0.707107 0.707107 3.141593
+                          jointId 4
+                          llimit [-0.452000]
+                          ulimit [0.452000]
+                          gearRatio 120.000000
+                          rotorInertia 0.000040
+                          children [
+                            DEF rankle_p Joint {
+                              jointType "rotate"
+                              translation  0 0 0
+                              rotation 0.577350 -0.577350 0.577350 2.094395
+                              jointId 5
+                              llimit [-0.767000]
+                              ulimit [0.593000]
+                              gearRatio 120.000000
+                              rotorInertia 0.000040
+                              children [
+                                DEF rankle_p Segment {
+                                  centerOfMass  0.00019 0.05392 0
+                                  mass 2.109090
+                                  momentsOfInertia [
+                                  0.00280075515 0.00037885416 -6e-10
+                                  0.00037885416 0.00350505825 -2.4e-10
+                                  -6e-10 -2.4e-10 0.00389387948
+                                  ]
+                                  children [
+                                    Transform {
+                                      children[
+                                        Shape{
+                                          
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                                DEF right_foot Joint {
+                                  jointType "fixed"
+                                  translation  0 0.09799998188 0
+                                  rotation 1.000000 0.000000 0.000000 1.570796
+                                  children [
+                                    DEF rfsensor ForceSensor {
+                                      sensorId 0
+                                    }
+                                    DEF right_foot Segment {
+                                      centerOfMass  0 0 0
+                                      mass 0.0001
+                                      momentsOfInertia [
+                                      1e-05 0 0
+                                      0 1e-05 0
+                                      0 0 1e-05
+                                      ]
+                                      children [
+                                        Transform {
+                                          children[
+                                            Shape{
+            
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        DEF lhip_y Joint {
+          jointType "rotate"
+          translation  0.0015 0.125 -0.162
+          rotation 0.000000 0.000000 1.000000 3.141593
+          jointId 6
+          llimit [-1.047000]
+          ulimit [1.047000]
+          gearRatio 120.000000
+          rotorInertia 0.000040
+          children [
+            DEF lhip_y Segment {
+              centerOfMass  0.01641 -0.00361 0.03934
+              mass 1.593870
+              momentsOfInertia [
+              0.00697554367 8.334322e-05 -0.00034794546
+              8.334322e-05 0.00533888663 -0.00049910953
+              -0.00034794546 -0.00049910953 0.00304326124
+              ]
+              children [
+                Transform {
+                  children[
+                    Shape{
+                      
+                    }
+                  ]
+                }
+              ]
+            }
+            DEF lhip_p Joint {
+              jointType "rotate"
+              translation  0 0 0
+              rotation 0.577350 0.577350 -0.577350 2.094395
+              jointId 7
+              llimit [-1.832000]
+              ulimit [0.000000]
+              gearRatio 120.000000
+              rotorInertia 0.000040
+              children [
+                DEF lhip_r Joint {
+                  jointType "rotate"
+                  translation  0 0 0
+                  rotation 0.000000 -0.707107 0.707107 3.141593
+                  jointId 8
+                  llimit [-0.392000]
+                  ulimit [0.392000]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                    DEF lhip_r Segment {
+                      centerOfMass  -0.22592 -0.00813 0.00541
+                      mass 8.499320
+                      momentsOfInertia [
+                      0.04714227665 0.00302587832 -0.00255344728
+                      0.00302587832 0.1212263714 0.00274226076
+                      -0.00255344728 0.00274226076 0.1036673061
+                      ]
+                      children [
+                        Transform {
+                          children[
+                            Shape{
+                              
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                    DEF lknee_p Joint {
+                      jointType "rotate"
+                      translation  -0.432 0 0
+                      rotation 0.000000 -0.707107 0.707107 3.141593
+                      jointId 9
+                      llimit [0.000000]
+                      ulimit [2.094000]
+                      gearRatio 120.000000
+                      rotorInertia 0.000040
+                      children [
+                        DEF lknee_p Segment {
+                          centerOfMass  0.17447 -0.03387 -2e-05
+                          mass 4.668710
+                          momentsOfInertia [
+                          0.00955696331 0.00385873865 4.80466e-06
+                          0.00385873865 0.05580191976 -2.66171e-06
+                          4.80466e-06 -2.66171e-06 0.05564742212
+                          ]
+                          children [
+                            Transform {
+                              children[
+                                Shape{
+                                  
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                        DEF lankle_r Joint {
+                          jointType "rotate"
+                          translation  0.403 -0.01 0
+                          rotation 0.000000 -0.707107 0.707107 3.141593
+                          jointId 10
+                          llimit [-0.452000]
+                          ulimit [0.452000]
+                          gearRatio 120.000000
+                          rotorInertia 0.000040
+                          children [
+                            DEF lankle_p Joint {
+                              jointType "rotate"
+                              translation  0 0 0
+                              rotation 0.577350 -0.577350 0.577350 2.094395
+                              jointId 11
+                              llimit [-0.767000]
+                              ulimit [0.593000]
+                              gearRatio 120.000000
+                              rotorInertia 0.000040
+                              children [
+                                DEF lankle_p Segment {
+                                  centerOfMass  0.00019 0.05392 0
+                                  mass 2.109090
+                                  momentsOfInertia [
+                                  0.00280075515 0.00037885416 -6e-10
+                                  0.00037885416 0.00350505825 -2.4e-10
+                                  -6e-10 -2.4e-10 0.00389387948
+                                  ]
+                                  children [
+                                    Transform {
+                                      children[
+                                        Shape{
+                                          
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                                DEF left_foot Joint {
+                                  jointType "fixed"
+                                  translation  0 0.09799998188 0
+                                  rotation 1.000000 0.000000 0.000000 1.570796
+                                  children [
+                                    DEF lfsensor ForceSensor {
+                                      sensorId 1
+			   	    }
+                                    DEF left_foot Segment {
+                                      centerOfMass  0 0 0
+                                      mass 0.0001
+                                      momentsOfInertia [
+                                      1e-05 0 0
+                                      0 1e-05 0
+                                      0 0 1e-05
+                                      ]
+                                      children [
+                                        Transform {
+                                          children[
+                                            Shape{
+                                            
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        DEF waist_p Joint {
+          jointType "rotate"
+          translation  0 0 0
+          rotation -0.577350 0.577350 0.577350 2.094395
+          jointId 12
+          llimit [-0.349000]
+          ulimit [1.047000]
+          gearRatio 120.000000
+          rotorInertia 0.000040
+          children [
+            DEF waist_r Joint {
+              jointType "rotate"
+              translation  0 0 0
+              rotation 0.000000 -0.707107 0.707107 3.141593
+              jointId 13
+              llimit [-0.392000]
+              ulimit [0.392000]
+              gearRatio 120.000000
+              rotorInertia 0.000040
+              children [
+                DEF waist_r Segment {
+                  centerOfMass  0.23508 -0.01334 -0.18897
+                  mass 20.393300
+                  momentsOfInertia [
+                  0.5495496293 -0.00373357758 -0.0583440696
+                  -0.00373357758 0.573387112 0.03281389073
+                  -0.0583440696 0.03281389073 0.1173903916
+                  ]
+                  children [
+                    Transform {
+                      children[
+                        Shape{
+                          
+                        }
+                      ]
+                    }
+                    Transform {
+                      translation 0.16 0 0.12
+                      children [
+                        DEF JVRC-Robot-Marker Shape {
+                          geometry Sphere { radius 0.025 }
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 1.0 0.0 0.0
+                              emissiveColor 1.0 0.0 0.0
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+                DEF neck_p Joint {
+                  jointType "fixed"
+                  translation  0.4356 0 0.07
+                  rotation 1.000000 0.000000 0.000000 1.570796
+                  jointId 14
+                  llimit [-0.000000]
+                  ulimit [2.094000]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                    
+                    DEF neck_y Joint {
+                      jointType "fixed"
+                      translation  0.2 0.08 0
+                      rotation 0.577350 0.577350 0.577350 2.094395
+                      jointId 15
+                      llimit [-1.570796]
+                      ulimit [1.570796]
+                      gearRatio 120.000000
+                      rotorInertia 0.000040
+                      children [
+                        DEF camera Joint {
+                          jointType "fixed"
+                          translation  0 0 0
+                          rotation 0.577350 -0.577350 -0.577350 2.094395
+                          children [
+                            DEF camera VisionSensor {
+                              frontClipDistance 0.05
+                              width 640
+                              height 480
+                              type "COLOR"
+                              sensorId 0
+                              fieldOfView 1.0
+                            }
+                            DEF light SpotLightDevice {
+                              direction 0 0 -1
+                              cutOffAngle 0.6
+                              attenuation 1 0 0.01
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+                DEF rscaplae_y Joint {
+                  jointType "fixed"
+                  translation  0.2576 0.13 0.0245
+                  rotation 0.000000 1.000000 0.000000 1.570796
+                  jointId 16
+                  llimit [-0.523000]
+                  ulimit [1.570000]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                  
+                    DEF rshoulder_p Joint {
+                      jointType "fixed"
+                      translation  0 0.12867 0
+                      rotation 0.577350 0.577350 -0.577350 2.094395
+                      jointId 17
+                      llimit [-0.523000]
+                      ulimit [0.523000]
+                      gearRatio 120.000000
+                      rotorInertia 0.000040
+                      children [
+                        DEF rshoulder_r Joint {
+                          jointType "fixed"
+                          translation  0 0 0
+                          rotation 0.577350 0.577350 -0.577350 2.094395
+                          jointId 18
+                          llimit [-2.050000]
+                          ulimit [0.305000]
+                          gearRatio 120.000000
+                          rotorInertia 0.000040
+                          children [
+                          
+                            DEF rshoulder_y Joint {
+                              jointType "fixed"
+                              translation  0 0 0
+                              rotation 0.577350 0.577350 -0.577350 2.094395
+                              jointId 19
+                              llimit [-0.523000]
+                              ulimit [1.570000]
+                              gearRatio 120.000000
+                              rotorInertia 0.000040
+                              children [
+                               
+                                DEF relbow_p Joint {
+                                  jointType "fixed"
+                                  translation  -0.05115 -0.01025 -0.4434
+                                  rotation 0.000000 -0.707107 0.707107 3.141593
+                                  jointId 20
+                                  llimit [-2.042000]
+                                  ulimit [0.157000]
+                                  gearRatio 120.000000
+                                  rotorInertia 0.000040
+                                  children [
+                                
+                                    DEF rwrist_y Joint {
+                                      jointType "fixed"
+                                      translation  -0.01115 0.484 0
+                                      rotation 0.577350 -0.577350 0.577350 2.094395
+                                      jointId 21
+                                      llimit [-0.174000]
+                                      ulimit [1.919000]
+                                      gearRatio 120.000000
+                                      rotorInertia 0.000040
+                                      children [
+                                     
+                                        DEF rwrist_r Joint {
+                                          jointType "fixed"
+                                          translation  0 0 0
+                                          rotation 0.577350 -0.577350 0.577350 2.094395
+                                          jointId 22
+                                          llimit [-0.507000]
+                                          ulimit [0.507000]
+                                          gearRatio 120.000000
+                                          rotorInertia 0.000040
+                                          children [
+                                            DEF rwrist_p Joint {
+                                              jointType "fixed"
+                                              translation  0 0 0
+                                              rotation 0.577350 -0.577350 0.577350 2.094395
+                                              jointId 23
+                                              llimit [-1.151000]
+                                              ulimit [1.483000]
+                                              gearRatio 120.000000
+                                              rotorInertia 0.000040
+                                              children [
+                                               
+                                                DEF rfinger1_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.02975 0.047 0
+                                                  rotation 0.577350 -0.577350 0.577350 2.094395
+                                                  jointId 32
+                                                  llimit [-1.570000]
+                                                  ulimit [0.349000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                   
+                                                    DEF rfinger1_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 -0.033 0
+                                                      rotation -0.577350 0.577350 -0.577350 2.094395
+                                                      jointId 33
+                                                      llimit [0.000000]
+                                                      ulimit [1.570000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                    
+                                                        DEF rfinger1_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0.035 0 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 34
+                                                          llimit [0.000000]
+                                                          ulimit [1.570000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                          
+                                                            DEF rfinger1_4 Joint {
+                                                              jointType "fixed"
+                                                              translation  0.025 0 0
+                                                              rotation 0.000000 0.000000 1.000000 0.000000
+                                                              jointId 35
+                                                              llimit [0.000000]
+                                                              ulimit [1.570000]
+                                                              gearRatio 120.000000
+                                                              rotorInertia 0.000040
+                                                              children [
+                                                      
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF rfinger2_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.115474 -0.034876
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 36
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                   
+                                                    DEF rfinger2_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 37
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                      
+                                                        DEF rfinger2_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 38
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                           
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF rfinger3_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.117 0
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 39
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                 
+                                                    DEF rfinger3_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 40
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                       
+                                                        DEF rfinger3_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 41
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                           
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF rfinger4_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.115474 0.034876
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 42
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                  
+                                                    DEF rfinger4_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 43
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                       
+                                                        DEF rfinger4_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 44
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                            
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF right_hand Joint {
+                                                  jointType "fixed"
+                                                  translation  0.03 0.13 0
+                                                  rotation 1.000000 0.000000 0.000000 1.570796
+                                                  children [
+                                                    DEF rhsensor ForceSensor {
+                                                      sensorId 2
+                                                    }
+                                                    
+                                                    DEF rhcamera Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0 0
+                                                      rotation 0.000000 0.000000 -1.000000 1.570796
+                                                      children [
+                                                        DEF rhcamera VisionSensor {
+                                                          frontClipDistance 0.05
+                                                          width 640
+                                                          height 480
+                                                          type "COLOR"
+                                                          sensorId 1
+                                                          fieldOfView 1.0
+                                                        }
+                                                        DEF rhranger RangeSensor {
+                                                          translation 0.0 0.0 0.0
+                                                          rotation 0 0 1 0
+                                                          sensorId 1
+                                                          minDistance 0.1
+                                                          maxDistance 30.0
+                                                        }
+                                                        DEF rhlight SpotLightDevice {
+                                                          direction 0 0 -1
+                                                          cutOffAngle 0.6
+                                                          attenuation 1 0 0.01
+                                                        }
+                                                       
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+                DEF lscaplae_y Joint {
+                  jointType "fixed"
+                  translation  0.2576 -0.13 0.0245
+                  rotation 0.000000 1.000000 0.000000 1.570796
+                  jointId 24
+                  llimit [-1.570000]
+                  ulimit [0.523000]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                 
+                    DEF lshoulder_p Joint {
+                      jointType "fixed"
+                      translation  0 -0.12867 0
+                      rotation 0.577350 0.577350 -0.577350 2.094395
+                      jointId 25
+                      llimit [-0.523000]
+                      ulimit [0.523000]
+                      gearRatio 120.000000
+                      rotorInertia 0.000040
+                      children [
+                        DEF lshoulder_r Joint {
+                          jointType "fixed"
+                          translation  0 0 0
+                          rotation 0.577350 0.577350 -0.577350 2.094395
+                          jointId 26
+                          llimit [-0.305000]
+                          ulimit [2.050000]
+                          gearRatio 120.000000
+                          rotorInertia 0.000040
+                          children [
+                            
+                            DEF lshoulder_y Joint {
+                              jointType "fixed"
+                              translation  0 0 0
+                              rotation 0.577350 0.577350 -0.577350 2.094395
+                              jointId 27
+                              llimit [-1.570000]
+                              ulimit [0.523000]
+                              gearRatio 120.000000
+                              rotorInertia 0.000040
+                              children [
+                                
+                                DEF lelbow_p Joint {
+                                  jointType "fixed"
+                                  translation  -0.05115 0.01025 -0.4434
+                                  rotation 0.000000 -0.707107 0.707107 3.141593
+                                  jointId 28
+                                  llimit [-2.042000]
+                                  ulimit [0.157000]
+                                  gearRatio 120.000000
+                                  rotorInertia 0.000040
+                                  children [
+                                   
+                                    DEF lwrist_y Joint {
+                                      jointType "fixed"
+                                      translation  -0.01115 0.484 0
+                                      rotation 0.577350 -0.577350 0.577350 2.094395
+                                      jointId 29
+                                      llimit [-1.919000]
+                                      ulimit [0.174000]
+                                      gearRatio 120.000000
+                                      rotorInertia 0.000040
+                                      children [
+                                       
+                                        DEF lwrist_r Joint {
+                                          jointType "fixed"
+                                          translation  0 0 0
+                                          rotation 0.577350 -0.577350 0.577350 2.094395
+                                          jointId 30
+                                          llimit [-0.507000]
+                                          ulimit [0.507000]
+                                          gearRatio 120.000000
+                                          rotorInertia 0.000040
+                                          children [
+                                            DEF lwrist_p Joint {
+                                              jointType "fixed"
+                                              translation  0 0 0
+                                              rotation 0.577350 -0.577350 0.577350 2.094395
+                                              jointId 31
+                                              llimit [-1.151000]
+                                              ulimit [1.483000]
+                                              gearRatio 120.000000
+                                              rotorInertia 0.000040
+                                              children [
+                                                
+                                                DEF lfinger1_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.02975 0.047 0
+                                                  rotation 0.577350 -0.577350 0.577350 2.094395
+                                                  jointId 45
+                                                  llimit [-0.349000]
+                                                  ulimit [1.570000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                    
+                                                    DEF lfinger1_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 -0.033 0
+                                                      rotation -0.577350 0.577350 -0.577350 2.094395
+                                                      jointId 46
+                                                      llimit [0.000000]
+                                                      ulimit [1.570000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                       
+                                                        DEF lfinger1_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0.035 0 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 47
+                                                          llimit [0.000000]
+                                                          ulimit [1.570000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                           
+                                                            DEF lfinger1_4 Joint {
+                                                              jointType "fixed"
+                                                              translation  0.025 0 0
+                                                              rotation 0.000000 0.000000 1.000000 0.000000
+                                                              jointId 48
+                                                              llimit [0.000000]
+                                                              ulimit [1.570000]
+                                                              gearRatio 120.000000
+                                                              rotorInertia 0.000040
+                                                              children [
+                                                              
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF lfinger2_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.115474 -0.034876
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 49
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                   
+                                                    DEF lfinger2_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 50
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                        
+                                                        DEF lfinger2_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 51
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                           
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF lfinger3_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.117 0
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 52
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                   
+                                                    DEF lfinger3_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 53
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                       
+                                                        DEF lfinger3_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 54
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                        
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF lfinger4_1 Joint {
+                                                  jointType "fixed"
+                                                  translation  0.00475 0.115474 0.034876
+                                                  rotation 0.000000 0.000000 1.000000 0.000000
+                                                  jointId 55
+                                                  llimit [-1.570000]
+                                                  ulimit [0.000000]
+                                                  gearRatio 120.000000
+                                                  rotorInertia 0.000040
+                                                  children [
+                                                    
+                                                    DEF lfinger4_2 Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0.035 0
+                                                      rotation 0.000000 0.000000 1.000000 0.000000
+                                                      jointId 56
+                                                      llimit [-1.570000]
+                                                      ulimit [0.000000]
+                                                      gearRatio 120.000000
+                                                      rotorInertia 0.000040
+                                                      children [
+                                                       
+                                                        DEF lfinger4_3 Joint {
+                                                          jointType "fixed"
+                                                          translation  0 0.025 0
+                                                          rotation 0.000000 0.000000 1.000000 0.000000
+                                                          jointId 57
+                                                          llimit [-1.570000]
+                                                          ulimit [0.000000]
+                                                          gearRatio 120.000000
+                                                          rotorInertia 0.000040
+                                                          children [
+                                                            
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                                DEF left_hand Joint {
+                                                  jointType "fixed"
+                                                  translation  0.03 0.13 0
+                                                  rotation 1.000000 0.000000 0.000000 1.570796
+                                                  children [
+                                                    DEF lhsensor ForceSensor {
+                                                      sensorId 3
+                                                    }
+                                                    
+                                                    DEF lhcamera Joint {
+                                                      jointType "fixed"
+                                                      translation  0 0 0
+                                                      rotation 0.000000 0.000000 -1.000000 1.570796
+                                                      children [
+                                                        DEF lhcamera VisionSensor {
+                                                          frontClipDistance 0.05
+                                                          width 640
+                                                          height 480
+                                                          type "COLOR"
+                                                          sensorId 2
+                                                          fieldOfView 1.0
+                                                        }
+                                                        DEF lhranger RangeSensor {
+                                                          translation 0.0 0.0 0.0
+                                                          rotation 0 0 1 0
+                                                          sensorId 2
+                                                          minDistance 0.1
+                                                          maxDistance 30.0
+                                                        }
+                                                        DEF lhlight SpotLightDevice {
+                                                          direction 0 0 -1
+                                                          cutOffAngle 0.6
+                                                          attenuation 1 0 0.01
+                                                        }
+                                                       
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+                DEF ranger_p Joint {
+                  jointType "rotate"
+                  translation  0 0 0.2
+                  rotation -1.000000 0.000000 0.000000 1.570796
+                  jointId 58
+                  llimit [-1.570796]
+                  ulimit [1.570796]
+                  gearRatio 120.000000
+                  rotorInertia 0.000040
+                  children [
+                    DEF ranger Joint {
+                      jointType "fixed"
+                      translation  0 0 0
+                      rotation -0.577350 -0.577350 -0.577350 2.094395
+                      children [
+                        DEF ranger RangeSensor {
+                          translation 0.0 0.0 0.0
+                          rotation 0 0 1 0
+                          sensorId 0
+                          minDistance 0.1
+                          maxDistance 30.0
+                        }
+                        DEF ranger Segment {
+                          centerOfMass  0 0 0
+                          mass 0.010000
+                          momentsOfInertia [
+                          1e-05 0 0
+                          0 1e-05 0
+                          0 0 1e-05
+                          ]
+                          children [
+                            Transform {
+                              children[
+                                Shape{
+                                  appearance Appearance {
+                                    material Material {
+                                      ambientIntensity 0.100000
+                                      diffuseColor 0.000000 0.000000 0.000000
+                                      specularColor 0.600000 0.600000 0.600000
+                                    }
+                                  }
+                                  geometry IndexedFaceSet {
+                                    coordIndex [
+                                      0, 1, 2, -1,
+                                      0, 2, 3, -1,
+                                      0, 4, 5, -1,
+                                      0, 5, 1, -1,
+                                      1, 5, 6, -1,
+                                      1, 6, 2, -1,
+                                      2, 6, 7, -1,
+                                      2, 7, 3, -1,
+                                      3, 7, 4, -1,
+                                      3, 4, 0, -1,
+                                      7, 6, 5, -1,
+                                      7, 5, 4, -1
+                                    ]
+                                    creaseAngle 0.5
+                                    colorPerVertex FALSE
+                                    solid FALSE
+                                    coord Coordinate {
+                                      point [
+                                        0.050000 0.010000 0.050000 ,
+                                        0.050000 0.010000 -0.050000 ,
+                                        -0.050000 0.010000 -0.050000 ,
+                                        -0.050000 0.010000 0.050000 ,
+                                        0.050000 -0.010000 0.050000 ,
+                                        0.050000 -0.010000 -0.050000 ,
+                                        -0.050000 -0.010000 -0.050000 ,
+                                        -0.050000 -0.010000 0.050000
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  joints [
+    USE waist_base,
+    USE rhip_y,
+    USE rhip_p,
+    USE rhip_r,
+    USE rknee_p,
+    USE rankle_r,
+    USE rankle_p,
+    USE right_foot,
+    USE lhip_y,
+    USE lhip_p,
+    USE lhip_r,
+    USE lknee_p,
+    USE lankle_r,
+    USE lankle_p,
+    USE left_foot,
+    USE waist_p,
+    USE waist_r,
+    USE ranger_p,
+    USE ranger,
+  ]
+  segments [
+    USE waist_base,
+    USE rhip_y,
+    USE rhip_r,
+    USE rknee_p,
+    USE rankle_p,
+    USE right_foot,
+    USE lhip_y,
+    USE lhip_r,
+    USE lknee_p,
+    USE lankle_p,
+    USE left_foot,
+    USE waist_r,
+    USE ranger,
+  ]
+}
