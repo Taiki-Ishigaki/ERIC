@@ -3,7 +3,16 @@ import numpy as np
 import bpy
 
 class MakeJointModel:
-#    def __init__(self):
+    def __init__(self):
+        #make material
+        bpy.data.materials.new(name = 'link')
+        mat = bpy.data.materials['link']
+        mat.use_nodes = False
+        mat.diffuse_color = (1,1,1,1) 
+        bpy.data.materials.new(name = 'joint')
+        mat = bpy.data.materials['joint']
+        mat.use_nodes = False
+        mat.diffuse_color = (0,0.5,0,1) 
 
     def make_link(self, name, size, length, pos, att):
         pos_ = np.array( [[0], [0], [ 0.5*length]] )
@@ -14,6 +23,10 @@ class MakeJointModel:
         bpy.ops.transform.rotate(value=att[1], orient_axis='Y', orient_type='GLOBAL')
         bpy.ops.transform.rotate(value=att[2], orient_axis='Z', orient_type='GLOBAL')       
         bpy.ops.transform.translate(value=pos, constraint_axis=( True, True, True)) 
+        # change color
+        mat = bpy.data.materials['link']
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material=mat
         # change name
         obj = bpy.context.object
         obj.name = name
@@ -28,7 +41,11 @@ class MakeJointModel:
         bpy.ops.transform.rotate(value=att[1], orient_axis='X', orient_type='GLOBAL')
         bpy.ops.transform.rotate(value=att[1], orient_axis='Y', orient_type='GLOBAL')
         bpy.ops.transform.rotate(value=att[2], orient_axis='Z', orient_type='GLOBAL')   
-        bpy.ops.transform.translate(value=pos, constraint_axis=( True, True, True))        
+        bpy.ops.transform.translate(value=pos, constraint_axis=( True, True, True))  
+        # change color
+        mat = bpy.data.materials['link']
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material=mat  
         # change name
         obj = bpy.context.object
         obj.name = name
@@ -85,6 +102,10 @@ class MakeJointModel:
         bpy.ops.transform.rotate(value=att[1], orient_axis='Y', orient_type='GLOBAL')
         bpy.ops.transform.rotate(value=att[2], orient_axis='Z', orient_type='GLOBAL')           
         bpy.ops.transform.translate(value=pos, constraint_axis=( True, True, True))
+        # change color
+        mat = bpy.data.materials['joint']
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material=mat
         # change name
         obj.name = name
         obj.data.name = name
@@ -116,30 +137,31 @@ class JointRobot:
         creater.make_link("link1", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint2", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link2", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint3", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link3", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint4", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link4", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint5", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link5", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint6", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link6", self.scale, self.link_length, pos, rot(0, 0, 0))
         pos += tra(0.0, 0.0, self.link_length+self.scale)
         creater.make_rotational_joint("joint7", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, 0.5*self.scale)
+        pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link7", self.scale, self.link_length, pos, rot(0, 0, 0))
             
 if __name__ == '__main__':  
+    bpy.ops.object.select_all(action="DESELECT")
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(True)
     
