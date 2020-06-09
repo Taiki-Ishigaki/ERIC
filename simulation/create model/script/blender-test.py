@@ -31,6 +31,8 @@ class MakeJointModel:
         obj = bpy.context.object
         obj.name = name
         obj.data.name = name
+
+        bpy.ops.object.armature_add(enter_editmode=True, align='WORLD', location=pos)
     
     def make_base_link(self, name, size, pos, att):
         depth_ = 2*size
@@ -50,6 +52,9 @@ class MakeJointModel:
         obj = bpy.context.object
         obj.name = name
         obj.data.name = name
+
+        bpy.ops.object.armature_add(enter_editmode=True, align='WORLD', location=pos)
+
 
     def make_rotational_joint(self, name, size, pos, att):
         depth_ = size
@@ -128,6 +133,7 @@ class JointRobot:
 #            ['J', 'Rol'], ['L', 3], \
 #            ['J', 'Pit'], ['L', 3], \
 #            ['J', 'Yaw'], ['L', 3]]
+
         creater = MakeJointModel()
         pos = tra(0.0, 0.0, 0.0)
         creater.make_base_link("base_link", self.scale, pos, rot(0, 0, 0))
@@ -159,6 +165,16 @@ class JointRobot:
         creater.make_rotational_joint("joint7", self.scale, pos, rot(0, 0, 0) )
         pos += tra(0.0, 0.0, self.scale)
         creater.make_link("link7", self.scale, self.link_length, pos, rot(0, 0, 0))
+
+        # bpy.ops.object.add(type='ARMATURE', enter_editmode=True, location=(0,0,0))
+        # amt = bpy.context.object
+        # amt.name = 'myArmature'
+
+        # bpy.ops.object.mode_set(mode='EDIT')
+        # b = amt.data.edit_bones.new('Bone')
+        # b.head = (0,0,3)
+        # b.tail = (0,0,3)
+        # b.use_deform = False
             
 if __name__ == '__main__':  
     bpy.ops.object.select_all(action="DESELECT")
