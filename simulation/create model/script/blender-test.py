@@ -31,8 +31,6 @@ class MakeJointModel:
         obj = bpy.context.object
         obj.name = name
         obj.data.name = name
-
-        bpy.ops.object.armature_add(enter_editmode=True, align='WORLD', location=pos)
     
     def make_base_link(self, name, size, pos, att):
         depth_ = 2*size
@@ -52,9 +50,6 @@ class MakeJointModel:
         obj = bpy.context.object
         obj.name = name
         obj.data.name = name
-
-        bpy.ops.object.armature_add(enter_editmode=True, align='WORLD', location=pos)
-
 
     def make_rotational_joint(self, name, size, pos, att):
         depth_ = size
@@ -124,64 +119,72 @@ def rot(roll, pitch, yaw):
 class JointRobot:
     def __init__(self):
         self.scale = 1.0
-        self.link_length = 3.0
-#        setting = [ \
-#            ['J', 'Yaw'], ['L', 3], \
-#            ['J', 'Rol'], ['L', 3], \
-#            ['J', 'Pit'], ['L', 3], \
-#            ['J', 'Yaw'], ['L', 3], \
-#            ['J', 'Rol'], ['L', 3], \
-#            ['J', 'Pit'], ['L', 3], \
-#            ['J', 'Yaw'], ['L', 3]]
+        self.setting = [ \
+           ['J', 'Yaw'], ['L', 3.0], \
+           ['J', 'Rol'], ['L', 3.0], \
+           ['J', 'Pit'], ['L', 3.0], \
+           ['J', 'Yaw'], ['L', 3.0], \
+           ['J', 'Rol'], ['L', 3.0], \
+           ['J', 'Pit'], ['L', 3.0], \
+           ['J', 'Yaw'], ['L', 3.0]]
 
+    def create(self, init_pos, init_att):
         creater = MakeJointModel()
-        pos = tra(0.0, 0.0, 0.0)
-        creater.make_base_link("base_link", self.scale, pos, rot(0, 0, 0))
+        pos = np.array(init_pos)
+        att = np.array(init_att)
+        joint_num = 1
+        link_num = 1
+        creater.make_base_link("BaseLink", self.scale, pos, att)
         pos += tra(0.0, 0.0, 3.0*self.scale)
-        creater.make_rotational_joint("joint1", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link1", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint2", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link2", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint3", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link3", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint4", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link4", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint5", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link5", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint6", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link6", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint7", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link7", self.scale, self.link_length, pos, rot(0, 0, 0))
+        for parts in self.setting:
+            if parts[0] == 'J':
+                if parts[1] == 'Rol':
+                    att = rot(0.0, 0.0, 0.0)
+                elif parts[1] == 'Pit':
+                    att = rot(0.0, np.pi/2, 0.0)
+                elif parts[1] == 'Yaw':
+                    att = rot(np.pi/2, 0.0, 0.0)  
+                creater.make_rotational_joint("Joint"+str(joint_num), self.scale, pos, att )
+                pos += tra(0.0, 0.0, self.scale)
+                joint_num += 1
+            elif parts[0] == 'L':
+                att = init_att
+                creater.make_link("Link"+str(link_num), self.scale, float(parts[1]), pos, att)
+                pos += tra(0.0, 0.0, float(parts[1])+self.scale)
+                link_num += 1
+        
+        bone = []
+        bone_num = 0
+        bpy.ops.object.add(type='ARMATURE', enter_editmode=True, align='WORLD', location=init_pos)
+        amt = bpy.context.object
+        amt.name = 'RobotArmature'
 
-        # bpy.ops.object.add(type='ARMATURE', enter_editmode=True, location=(0,0,0))
-        # amt = bpy.context.object
-        # amt.name = 'myArmature'
+        bpy.ops.object.mode_set(mode='EDIT')
+        b = amt.data.edit_bones.new('BaseLinkBone')
+        bone.append(b)
+        bone[bone_num].head = np.array(init_pos)
+        end_pos = tra(0.0, 0.0, 2.0*self.scale)
+        bone[bone_num].tail = end_pos
+        bone[bone_num].use_deform = False
+        bone_num += 1
+        for bones in self.setting:
+            if bones[0] == 'J':
+                end_pos += tra(0.0, 0.0, self.scale)
+                bone[bone_num-1].tail = end_pos
+            elif bones[0] == 'L':
+                b = amt.data.edit_bones.new('LinkBone'+str(bone_num))
+                bone.append(b)
+                bone[bone_num].head =  bone[bone_num-1].tail
+                end_pos += tra(0,0,float(bones[1]) + self.scale)
+                bone[bone_num].tail = end_pos
+                bone[bone_num].parent =  bone[bone_num-1]
+                bone[bone_num].use_deform = False
+                bone_num += 1
 
-        # bpy.ops.object.mode_set(mode='EDIT')
-        # b = amt.data.edit_bones.new('Bone')
-        # b.head = (0,0,3)
-        # b.tail = (0,0,3)
-        # b.use_deform = False
-            
 if __name__ == '__main__':  
     bpy.ops.object.select_all(action="DESELECT")
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(True)
     
     robot = JointRobot()
-
-#    creater = MakeJointModel()
-#    creater.make_rotational_joint("joint1", 1, tra(0, 0, 0), rot(np.pi/2, 0, 0) )
+    robot.create(tra(0.0, 0.0, 0.0), rot(0.0, 0.0, 0.0))
