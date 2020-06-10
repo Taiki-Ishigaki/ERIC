@@ -183,6 +183,7 @@ class JointRobot:
                 bone[bone_num].parent =  bone[bone_num-1]
                 bone[bone_num].use_deform = False
                 bone_num += 1
+        bpy.context.object.show_in_front = True   
 
 if __name__ == '__main__':  
     bpy.ops.object.select_all(action="DESELECT")
