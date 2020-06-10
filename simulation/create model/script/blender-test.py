@@ -126,6 +126,9 @@ class JointRobot:
            ['J', 'Yaw'], ['L', 3.0], \
            ['J', 'Rol'], ['L', 3.0], \
            ['J', 'Pit'], ['L', 3.0], \
+           ['J', 'Yaw'], ['L', 3.0], \
+           ['J', 'Rol'], ['L', 3.0], \
+           ['J', 'Pit'], ['L', 3.0], \
            ['J', 'Yaw'], ['L', 3.0]]
 
     def create(self, init_pos, init_att):
@@ -139,11 +142,11 @@ class JointRobot:
         for parts in self.setting:
             if parts[0] == 'J':
                 if parts[1] == 'Rol':
-                    att = rot(0.0, 0.0, 0.0)
-                elif parts[1] == 'Pit':
                     att = rot(0.0, np.pi/2, 0.0)
+                elif parts[1] == 'Pit':
+                    att = rot(np.pi/2, 0.0, 0.0)
                 elif parts[1] == 'Yaw':
-                    att = rot(np.pi/2, 0.0, 0.0)  
+                    att = rot(0.0, 0.0, 0.0)
                 creater.make_rotational_joint("Joint"+str(joint_num), self.scale, pos, att )
                 pos += tra(0.0, 0.0, self.scale)
                 joint_num += 1
