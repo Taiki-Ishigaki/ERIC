@@ -120,52 +120,44 @@ class JointRobot:
     def __init__(self):
         self.scale = 1.0
         self.link_length = 3.0
-#        setting = [ \
-#            ['J', 'Yaw'], ['L', 3], \
-#            ['J', 'Rol'], ['L', 3], \
-#            ['J', 'Pit'], ['L', 3], \
-#            ['J', 'Yaw'], ['L', 3], \
-#            ['J', 'Rol'], ['L', 3], \
-#            ['J', 'Pit'], ['L', 3], \
-#            ['J', 'Yaw'], ['L', 3]]
+        self.setting = [ \
+           ['J', 'Yaw'], ['L', 3.0], \
+           ['J', 'Rol'], ['L', 3.0], \
+           ['J', 'Pit'], ['L', 3.0], \
+           ['J', 'Yaw'], ['L', 3.0], \
+           ['J', 'Rol'], ['L', 3.0], \
+           ['J', 'Pit'], ['L', 3.0], \
+           ['J', 'Yaw'], ['L', 3.0]]
+
+    def create(self, init_pos, init_att):
         creater = MakeJointModel()
-        pos = tra(0.0, 0.0, 0.0)
-        creater.make_base_link("base_link", self.scale, pos, rot(0, 0, 0))
+        pos = init_pos
+        att = init_att
+        joint_num = 1
+        link_num = 1
+        creater.make_base_link("base_link", self.scale, pos, att)
         pos += tra(0.0, 0.0, 3.0*self.scale)
-        creater.make_rotational_joint("joint1", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link1", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint2", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link2", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint3", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link3", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint4", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link4", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint5", self.scale, pos, rot(0, np.pi/2, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link5", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint6", self.scale, pos, rot(np.pi/2, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link6", self.scale, self.link_length, pos, rot(0, 0, 0))
-        pos += tra(0.0, 0.0, self.link_length+self.scale)
-        creater.make_rotational_joint("joint7", self.scale, pos, rot(0, 0, 0) )
-        pos += tra(0.0, 0.0, self.scale)
-        creater.make_link("link7", self.scale, self.link_length, pos, rot(0, 0, 0))
-            
+        for parts in self.setting:
+            if parts[0] == 'J':
+                if parts[1] == 'Rol':
+                    att = rot(0.0, 0.0, 0.0)
+                elif parts[1] == 'Pit':
+                    att = rot(0.0, np.pi/2, 0.0)
+                elif parts[1] == 'Yaw':
+                    att = rot(np.pi/2, 0.0, 0.0)  
+                creater.make_rotational_joint("joint"+str(joint_num), self.scale, pos, att )
+                pos += tra(0.0, 0.0, self.scale)
+                joint_num += 1
+            elif parts[0] == 'L':
+                att = init_att
+                creater.make_link("link"+str(link_num), self.scale, float(parts[1]), pos, att)
+                pos += tra(0.0, 0.0, self.link_length+self.scale)
+                link_num += 1
+
 if __name__ == '__main__':  
     bpy.ops.object.select_all(action="DESELECT")
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(True)
     
     robot = JointRobot()
-
-#    creater = MakeJointModel()
-#    creater.make_rotational_joint("joint1", 1, tra(0, 0, 0), rot(np.pi/2, 0, 0) )
+    robot.create(tra(0.0, 0.0, 0.0), rot(0.0, 0.0, 0.0))
