@@ -6,4 +6,4 @@
 
 ## lipm phase portrait
 
-![phase portrait](https://raw.github.com/wiki/Taiki-Ishigaki/Eric/images/bipedal/lipm/phase_portrait.png)
+![phase portrait](https://raw.github.com/wiki/Taiki-Ishigaki/Eric/images/bipedal/lipm/phase_portrait2.png)

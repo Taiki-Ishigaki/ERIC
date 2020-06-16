@@ -67,7 +67,7 @@ if __name__ == '__main__':
     u_ref = np.array([[0.5]])
     x_start = np.array([[0.],[0.]])
     dt = 0.01
-    height = 2.0
+    height = 9.8
     plant = LinearInvertedPendulum(height)
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -95,13 +95,15 @@ if __name__ == '__main__':
     # hull = ssp.ConvexHull(bases)
 
     #ode
-    time = np.arange(0, 8, 0.01)
-    step = 40 
+    time = np.arange(0, 16, 0.01)
+    step = 20 
     count = 0
+
     for xi in np.linspace(x_min, x_max, step):
-        count += 1
         for xj in np.linspace(dx_min, dx_max, step):
-            if (xj == dx_min and xi > 0)  or (xj == dx_max and xi < 0):
+            if (xj == dx_min and xi > 0)  or (xj == dx_max and xi < 0) or\
+               (xi ==  x_min and xj > 0)  or (xi ==  x_max and xj < 0):
+                count += 1
                 x_data = odeint(plant.calc_dX, [xi, xj], time)
                 plt.plot(x_data[:,0], x_data[:,1], color='k', linewidth = 0.6)
                 # if x_data[-1,0] < 0.1 or x_data[-1,1] < 0.1:
@@ -109,11 +111,13 @@ if __name__ == '__main__':
                 if (count%2 == 0 and xi > 0) or (count%2 == 1 and xi < 0):
                     ss = []
                     for s in range(time.size-1):
-                        if (x_data[s,1]-dx_max)*(x_data[s+1,1]-dx_max) <= 0 or (x_data[s,1]-dx_min)*(x_data[s+1,1]-dx_min) <= 0:
+                        if (x_data[s,1]-dx_max)*(x_data[s+1,1]-dx_max) <= 0 or (x_data[s,1]-dx_min)*(x_data[s+1,1]-dx_min) <= 0 or \
+                           (x_data[s,0]- x_max)*(x_data[s+1,0]- x_max) <= 0 or (x_data[s,0]- x_min)*(x_data[s+1,0]- x_min) <= 0:
                             ss.append(s)
                     l = ss[1] - ss[0]
                     k = 0#int(l/15)
-                    if  abs(x_data[ss[0],0] - x_data[ss[1],0]) > 2 or abs(x_data[ss[0],1] - x_data[ss[1],1]) > 1:
+                    if  (abs(x_data[ss[0],1] + x_data[ss[1],1])/2 > 1 and abs(x_data[ss[0],0] - x_data[ss[1],0]) > 4) or\
+                        (abs(x_data[ss[0],0] + x_data[ss[1],0])/2 > 1 and abs(x_data[ss[0],1] - x_data[ss[1],1]) > 4):
                         X = np.array([x_data[ss[0]+k,0], x_data[ss[0]+k,1]])
                         dX = plant.calc_dX(X)
                         dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
@@ -124,7 +128,8 @@ if __name__ == '__main__':
                         dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         dX1_nr = dX[1] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         plt.quiver(X[0]-dX0_nr/3-dX0_nr/2, X[1]-dX1_nr/3-dX1_nr/2, dX0_nr, dX1_nr, color='b')
-                    if abs(x_data[ss[0],1] - x_data[ss[1],1]) > 1 or abs(x_data[int((ss[0]+ss[1])/2),1]) < 5:
+                    if (abs(x_data[ss[0],1] + x_data[ss[1],1])/2 > 1 and abs(x_data[int((ss[0]+ss[1])/2),1]) < 5) or \
+                       (abs(x_data[ss[0],0] + x_data[ss[1],0])/2 > 1 and abs(x_data[int((ss[0]+ss[1])/2),0]) < 5):
                         X = np.array([x_data[int((ss[0]+ss[1])*1/4),0], x_data[int((ss[0]+ss[1])*1/4),1]])
                         dX = plant.calc_dX(X)
                         dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
@@ -135,12 +140,17 @@ if __name__ == '__main__':
                         dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         dX1_nr = dX[1] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         plt.quiver(X[0]-dX0_nr/3, X[1]-dX1_nr/3, dX0_nr, dX1_nr, color='b')
-                    if abs(x_data[ss[0],1] - x_data[ss[1],1]) > 1:
+                    if abs(x_data[ss[0],1] - x_data[ss[1],1]) > 1 or abs(x_data[ss[0],0] - x_data[ss[1],0]) > 1:
                         X = np.array([x_data[int((ss[0]+ss[1])/2),0], x_data[int((ss[0]+ss[1])/2),1]])
                         dX = plant.calc_dX(X)
                         dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         dX1_nr = dX[1] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
                         plt.quiver(X[0]-dX0_nr/3, X[1]-dX1_nr/3, dX0_nr, dX1_nr, color='b')
+    x_data = odeint(plant.calc_dX, [+1e-3, +1e-3], time)
+    plt.plot(x_data[:,0], x_data[:,1], color='k', linewidth = 0.6)
+    x_data = odeint(plant.calc_dX, [-1e-3, -1e-3], time)
+    plt.plot(x_data[:,0], x_data[:,1], color='k', linewidth = 0.6)
+
     #contour
     # plt.contour(X[0], X[1], dX[1], levels=[0], colors="red")
     # plt.contour(X[0], X[1], dX[0], levels=[0], colors="Blue")
