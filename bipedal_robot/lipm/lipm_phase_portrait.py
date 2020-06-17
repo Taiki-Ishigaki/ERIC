@@ -43,6 +43,9 @@ class LinearInvertedPendulum(object):
     def get_u(self):
         return self.u
 
+    def get_omega(self):
+        return self.omega
+
     def calc_dX(self, X, t = 0):
         if X.shape == np.zeros((self.A[0].size, 1)).shape:# normal
             return self.A @ X
@@ -69,7 +72,7 @@ if __name__ == '__main__':
     dt = 0.01
     height = 9.8
     plant = LinearInvertedPendulum(height)
-    fig = plt.figure()
+    fig = plt.figure(figsize=(6,6))
     ax = fig.add_subplot(111)
 
     #mesh
@@ -98,6 +101,15 @@ if __name__ == '__main__':
     time = np.arange(0, 16, 0.01)
     step = 20 
     count = 0
+
+    tri = plt.Polygon(((0.0,0.0),(limit,limit),(-limit,limit)),fc="#ff0000",alpha=0.2)
+    ax.add_patch(tri)
+    tri = plt.Polygon(((0.0,0.0),(limit,-limit),(-limit,-limit)),fc="#ff0000",alpha=0.2)
+    ax.add_patch(tri)
+    tri = plt.Polygon(((0.0,0.0),(limit,limit),(limit,-limit)),fc="#0000ff",alpha=0.2)
+    ax.add_patch(tri)
+    tri = plt.Polygon(((0.0,0.0),(-limit,limit),(-limit,-limit)),fc="#0000ff",alpha=0.2)
+    ax.add_patch(tri)
 
     for xi in np.linspace(x_min, x_max, step):
         for xj in np.linspace(dx_min, dx_max, step):
@@ -150,6 +162,16 @@ if __name__ == '__main__':
     plt.plot(x_data[:,0], x_data[:,1], color='k', linewidth = 0.6)
     x_data = odeint(plant.calc_dX, [-1e-3, -1e-3], time)
     plt.plot(x_data[:,0], x_data[:,1], color='k', linewidth = 0.6)
+    X = np.array([[[-2,2],[-2,2]],[[2,2],[-2,-2]]])
+    dX = plant.calc_dX(X)
+    dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
+    dX1_nr = dX[1] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
+    plt.quiver(X[0]-dX0_nr/3, X[1]-dX1_nr/3, dX0_nr, dX1_nr, color='b')
+    X = np.array([[[-4,4],[-4,4]],[[4,4],[-4,-4]]])
+    dX = plant.calc_dX(X)
+    dX0_nr = dX[0] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
+    dX1_nr = dX[1] / (np.sqrt(dX[0]**2 + dX[1]**2) + 1e-6)
+    plt.quiver(X[0]-dX0_nr/3, X[1]-dX1_nr/3, dX0_nr, dX1_nr, color='b')
 
     #contour
     # plt.contour(X[0], X[1], dX[1], levels=[0], colors="red")
